@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "my_hw"
+version = "0.0.1"
+description = "A simple example CLI package"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+authors = [
+    { name = "Carlod Azofeifa", email = "carlos.azofeifa@github.com" }
+]
+
+license = { text = "MIT" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["my_hw/src"]
+
+[project.scripts]
+hello-world = "src.main:hello_world"
