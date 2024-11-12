@@ -44,7 +44,19 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: py-artifacts
+          path: ./py-artifacts
 
       - name: Install package from artifact
         run: |
+          cd ./py-artifacts && ls -la
           pip install dist/*.whl
+
+  validate:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Get package Info
+        run: |
+          pip show my-hw
+          hello-world
