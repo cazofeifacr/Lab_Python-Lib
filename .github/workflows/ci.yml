@@ -16,12 +16,15 @@ jobs:
 
       - name: Get commit
         id: get_commit_count
-        run: echo "COMMIT_COUNT=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+        run: |
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          echo "COMMIT_COUNT=$COMMIT_COUNT" >> $GITHUB_ENV
 
       - name: Update version
         run: |
-          COMMIT_COUNT=${{ env.COMMIT_COUNT }}
           sed -i "s/^version = \".*\"/version = \"0.0.${COMMIT_COUNT}\"/" pyproject.toml
+        env:
+          COMMIT_COUNT: ${{ env.COMMIT_COUNT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
