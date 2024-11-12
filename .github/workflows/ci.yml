@@ -16,7 +16,7 @@ jobs:
 
       - name: Get commit
         id: get_commit_count
-        run: echo "COMMIT_COUNT=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+        run: echo "COMMIT_COUNT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Update version
         run: |
