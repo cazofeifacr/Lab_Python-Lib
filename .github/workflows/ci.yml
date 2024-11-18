@@ -7,6 +7,16 @@ on:
     branches: [main]
 
 jobs:
+  info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List all secrets names
+        run: |
+          echo "Listing all secrets names:"
+          for each secret in $(env | grep '^SECRET_' | cut -d'=' -f1'); do 
+            echo "$secret"
+          done  
   build:
     runs-on: ubuntu-latest
 
