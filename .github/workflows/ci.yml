@@ -13,10 +13,13 @@ jobs:
     steps:
       - name: List all secrets names
         run: |
-          echo "Listing all secrets names:"
-          for each secret in $(env | grep '^SECRET_' | cut -d'=' -f1'); do 
-            echo "$secret"
-          done  
+          echo "Listing all secrets:"
+          for key in $(env | grep "^SECRET_" | cut -d= -f1); do
+            echo "$key=${!key}"
+          done
+        env: 
+          SECRET_ONE: ${{ secrets.SECRET_TEST }}  
+
   build:
     runs-on: ubuntu-latest
 
