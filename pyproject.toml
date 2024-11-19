@@ -21,3 +21,12 @@ packages = ["my_hw/src"]
 
 [project.scripts]
 hello-world = "src.main:hello_world"
+
+[tool.hatch.scripts]
+pre-commit = "pre-commit run --all-files"
+
+[project.optional-dependencies]
+development = [
+    "pre-commit",
+    "pytest",
+]
