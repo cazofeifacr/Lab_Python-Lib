@@ -101,22 +101,15 @@ jobs:
 
       - name: Install GitVersion
         run: |
-          dotnet tool install --global GitVersion.Tool --version 5.*
-          echo "##vso[task.prependpath]$HOME/.dotnet/tools"
+          dotnet tool install --global GitVersion.Tool
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Run GitVersion
         id: gitversion
         run: |
-          gitversion /output json /showvariable SemVer > version.json
-          cat version.json
-        shell: bash
-
-      - name: Extract SemVer from JSON
-        id: semver
-        run: |
-          SEMVER=$(cat version.json)
-          echo "SEMVER=${SEMVER}" >> $GITHUB_ENV
-        shell: bash
+          SemVer=$(gitversion /showvariable SemVer)
+          echo "Repo SemVer=$SemVer"
+          echo "Repo SemVer=$SemVer" >> $GITHUB_ENV
 
       - name: Setup Git
         run: |
@@ -125,7 +118,7 @@ jobs:
 
       - name: Create Tag
         run: |
-          git tag $SEMVER
-          git push origin $SEMVER
+          git tag ${{ env.SemVer }}
+          git push origin ${{ env.SemVer }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
