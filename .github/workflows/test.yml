@@ -57,7 +57,7 @@ jobs:
       - name: Test Snowflake CLI
         run: |
           snow connection list
-          snow connection test -c integration | grep Status
+          snow connection test -c myconnection | grep Status
         env:
           TERM: unknown
           SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
