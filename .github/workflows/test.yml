@@ -57,6 +57,7 @@ jobs:
       - name: Test Snowflake CLI
         run: |
           snow connection list
+          snow connection test -c myconnection --debug
           snow connection test -c myconnection | grep Status
         env:
           TERM: unknown
