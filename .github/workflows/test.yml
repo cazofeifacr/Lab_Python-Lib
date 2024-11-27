@@ -57,5 +57,5 @@ jobs:
       - name: Execute Snowflake CLI
         run: |
           snow --info   
-          snow --version 
-          snow connection jwt
+          snow --version
+          snow connection list
