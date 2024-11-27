@@ -47,7 +47,7 @@ jobs:
           - os: windows-latest
             python-version: "3.11"
             cloud-provider: azure
-            snow_cli_version: "3.2.0"
+            snow_cli_version: "3.1.0"
             download_name: windows
           
           # macOS  
