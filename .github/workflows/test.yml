@@ -43,6 +43,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Print Current Python Env
+        run: |
+          python --version && pip --version
+
       - name: Set up Snowflake CLI
         uses: Snowflake-Labs/snowflake-cli-action@v1.5
         with:
