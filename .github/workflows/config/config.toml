@@ -1,4 +1,4 @@
 [connection.default]
-[connections.jwt]
-schema = "PUBLIC"
+[connections.integration]
 authenticator = "SNOWFLAKE_JWT"
+schema = "PUBLIC"

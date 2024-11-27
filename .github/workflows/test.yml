@@ -11,6 +11,7 @@ jobs:
     name: Test Env ${{ matrix.download_name }}-${{ matrix.python-version}}
     runs-on: ${{ matrix.os }}
     env:
+      TERM: unknown  
       SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
       SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
       SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -58,4 +59,8 @@ jobs:
         run: |
           snow --info   
           snow --version
-          snow connection list
+          
+      - name: Test Snowflake CLI   
+        run: |
+            snow connection list
+            snow connection test -c integration | grep Status    
