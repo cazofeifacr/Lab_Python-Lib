@@ -10,6 +10,11 @@ jobs:
   test:
     name: Test Env ${{ matrix.download_name }}-${{ matrix.python-version}}
     runs-on: ${{ matrix.os }}
+    env:
+      SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
+      SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
 
     strategy:
       fail-fast: false
@@ -18,10 +23,17 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.9"
             cloud-provider: aws
+            snow_cli_version: "2.8.2"
             download_name: linux
           - os: ubuntu-latest
             python-version: "3.10"
             cloud-provider: aws
+            snow_cli_version: "3.1.0"
+            download_name: linux
+          - os: ubuntu-latest
+            python-version: "3.10"
+            cloud-provider: aws
+            snow_cli_version: "3.2.0"
             download_name: linux
 
     steps:
@@ -29,8 +41,20 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Set up Snowflake CLI
+        uses: Snowflake-Labs/snowflake-cli-action@v1.5
+        with:
+          cli-version: ${{ matrix.snow_cli_version }}
+          default-config-file-path: "./config/config.toml"
+
+      - name: Execute Snowflake CLI
+        run: |
+          snow --version
+          snow connection test
