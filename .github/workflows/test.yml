@@ -10,12 +10,6 @@ jobs:
   test:
     name: Test Env ${{ matrix.download_name }}-${{ matrix.python-version}}
     runs-on: ${{ matrix.os }}
-    env:
-      TERM: unknown  
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
 
     strategy:
       fail-fast: false
@@ -53,14 +47,20 @@ jobs:
         uses: Snowflake-Labs/snowflake-cli-action@v1.5
         with:
           cli-version: ${{ matrix.snow_cli_version }}
-          default-config-file-path: "./config/config.toml"
+          default-config-file-path: ".github/workflows/config/config.toml"
 
       - name: Execute Snowflake CLI
         run: |
           snow --info   
           snow --version
-          
-      - name: Test Snowflake CLI   
+
+      - name: Test Snowflake CLI
         run: |
-            snow connection list
-            snow connection test -c integration | grep Status    
+          snow connection list
+          snow connection test -c integration | grep Status
+        env:
+          TERM: unknown
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
