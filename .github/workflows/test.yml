@@ -10,11 +10,18 @@ jobs:
   test:
     name: Test Env ${{ matrix.download_name }}-${{ matrix.python-version}}
     runs-on: ${{ matrix.os }}
+    env:
+        TERM: unknown
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
+          # Ubuntu
           - os: ubuntu-latest
             python-version: "3.9"
             cloud-provider: aws
@@ -23,13 +30,32 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.10"
             cloud-provider: aws
-            snow_cli_version: "3.1.0"
+            snow_cli_version: "3.2.0"
             download_name: linux
           - os: ubuntu-latest
-            python-version: "3.10"
+            python-version: "3.11"
             cloud-provider: aws
             snow_cli_version: "3.2.0"
             download_name: linux
+          - os: ubuntu-latest
+            python-version: "3.12"
+            cloud-provider: aws
+            snow_cli_version: "3.2.0"
+            download_name: linux 
+
+          # Windows  
+          - os: windows-latest
+            python-version: "3.11"
+            cloud-provider: azure
+            snow_cli_version: "3.2.0"
+            download_name: windows
+          
+          # macOS  
+          - os: macos-latest
+            python-version: "3.11"
+            cloud-provider: aws
+            snow_cli_version: "3.2.0"
+            download_name: macos   
 
     steps:
       - name: Check out the repository
@@ -63,9 +89,4 @@ jobs:
           snow connection list
           snow connection test -c myconnection --debug
           snow connection test -c myconnection | grep Status
-        env:
-          TERM: unknown
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
+
