@@ -187,6 +187,9 @@ jobs:
           $CONFIG_FILE=".github\workflows\config\config.toml"
           $SNOWFLAKE_CONFIG_DIR = "$env:USERPROFILE\.snowflake"
           $SNOWFLAKE_CONFIG_PATH = "$SNOWFLAKE_CONFIG_DIR\config.toml"
+
+          Write-Output "SNOWFLAKE_CONFIG_DIR:  $SNOWFLAKE_CONFIG_DIR"
+          Write-Output "SNOWFLAKE_CONFIG_PATH: $SNOWFLAKE_CONFIG_PATH"
           
           New-Item -ItemType Directory -Force -Path $SNOWFLAKE_CONFIG_DIR
 
@@ -204,7 +207,7 @@ jobs:
           icacls $PRIVATE_KEY_FILE /inheritance:r /grant:r "$($env:USERNAME):(R)"
           icacls $SNOWFLAKE_CONFIG_PATH /inheritance:r /grant:r "$($env:USERNAME):(R)"
 
-          Write-Output "Snowflake configuration at $SNOWFLAKE_CONFIG_PATH:"
+          Write-Output "Snowflake configuration at $SNOWFLAKE_CONFIG_PATH"
           Get-Content $SNOWFLAKE_CONFIG_PATH
           
 
