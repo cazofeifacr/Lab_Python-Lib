@@ -13,6 +13,10 @@ jobs:
     env:
         TERM: unknown
         SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_DATABASE: CHECKPOINTS_DEMO
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_SCHEMA: DEMO
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_WAREHOUSE: XSMALL_WH
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_ROLE: CHECKPOINT_ROLE
         SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER }}
         SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
@@ -210,6 +214,19 @@ jobs:
           Write-Output "Snowflake configuration at $SNOWFLAKE_CONFIG_PATH"
           Get-Content $SNOWFLAKE_CONFIG_PATH
           
+      - name: Configure PySpark for Python
+        if: runner.os == 'Windows'
+        run: |
+            echo PYSPARK_PYTHON=$PythonPath >> $GITHUB_ENV
+            echo PYSPARK_DRIVER_PYTHON=$PythonPath >> $GITHUB_ENV
+
+      - name: Check Python versions
+        if: runner.os == 'Windows'
+        run: |
+          python --version
+          echo PYSPARK_PYTHON=%PYSPARK_PYTHON%
+          echo PYSPARK_DRIVER_PYTHON=%PYSPARK_DRIVER_PYTHON%
+          python -c "import sys; print(sys.version)"     
 
       - name: Test Snowflake CLI
         run: |
