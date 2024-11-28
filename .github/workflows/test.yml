@@ -45,20 +45,25 @@ jobs:
 
           # Windows
           - os: windows-latest
-            python-version: "3.10"
+            python-version: "3.9"
             cloud-provider: aws
             snow_cli_version: "2.8.2"
             download_name: windows  
           - os: windows-latest
             python-version: "3.10"
             cloud-provider: aws
-            snow_cli_version: "3.0.1"
+            snow_cli_version: "3.2.0"
             download_name: windows
           - os: windows-latest
-            python-version: "3.10"
+            python-version: "3.11"
             cloud-provider: aws
-            snow_cli_version: "3.0.2"
+            snow_cli_version: "3.2.0"
             download_name: windows  
+          - os: windows-latest
+            python-version: "3.12"
+            cloud-provider: aws
+            snow_cli_version: "3.2.0"
+            download_name: windows   
           
           # macOS  
           - os: macos-latest
