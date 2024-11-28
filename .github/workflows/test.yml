@@ -203,7 +203,7 @@ jobs:
           Add-Content -Path $CONFIG_FILE -Value "account = `"$env:SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT`""
           Add-Content -Path $CONFIG_FILE -Value "user = `"$env:SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER`""
           Add-Content -Path $CONFIG_FILE -Value "database = `"$env:SNOWFLAKE_CONNECTIONS_MYCONNECTION_DATABASE`""
-          Add-Content -Path $CONFIG_FILE -Value "warehouse = `"$env:SNOWFLAKE_CONNECTIOS_MYCONNECTION_WAREHOUSE`""
+          Add-Content -Path $CONFIG_FILE -Value "warehouse = `"$env:SNOWFLAKE_CONNECTIONS_MYCONNECTION_WAREHOUSE`""
           Add-Content -Path $CONFIG_FILE -Value "role = `"$env:SNOWFLAKE_CONNECTIONS_MYCONNECTION_ROLE`""
           Add-Content -Path $CONFIG_FILE -Value "private_key_file = `"$PRIVATE_KEY_FILE`""
 
