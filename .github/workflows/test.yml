@@ -100,7 +100,7 @@ jobs:
           python --version && pip --version
 
       - name: Set up Snowflake CLI
-        uses: Snowflake-Labs/snowflake-cli-action@v1.5
+        uses: Snowflake-Labs/snowflake-cli-action@main
         with:
           cli-version: ${{ matrix.snow_cli_version }}
           default-config-file-path: ".github/workflows/config/config.toml"
