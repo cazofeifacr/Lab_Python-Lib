@@ -95,7 +95,7 @@ jobs:
         shell: pwsh
         run: |
           $PARENT_DIR = Split-Path -Parent "${{ github.workspace }}"
-          $PRIVATE_KEY_FILE = "$PARENT_DIR\\.ssh\\key.p8"
+          $PRIVATE_KEY_FILE = Join-Path (Join-Path $PARENT_DIR '.ssh') 'key.p8'
           $CONFIG_FILE=".github\workflows\config\config.toml"
           $SNOWFLAKE_CONFIG_DIR = "$env:USERPROFILE\.snowflake"
           $SNOWFLAKE_CONFIG_PATH = "$SNOWFLAKE_CONFIG_DIR\config.toml"
