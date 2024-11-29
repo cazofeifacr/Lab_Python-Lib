@@ -121,20 +121,6 @@ jobs:
 
           Write-Output "Snowflake configuration at $SNOWFLAKE_CONFIG_PATH"
           Get-Content $SNOWFLAKE_CONFIG_PATH
-          
-      - name: Configure PySpark for Python
-        if: runner.os == 'Windows'
-        run: |
-            echo PYSPARK_PYTHON=$PythonPath >> $GITHUB_ENV
-            echo PYSPARK_DRIVER_PYTHON=$PythonPath >> $GITHUB_ENV
-
-      - name: Check Python versions
-        if: runner.os == 'Windows'
-        run: |
-          python --version
-          echo PYSPARK_PYTHON=%PYSPARK_PYTHON%
-          echo PYSPARK_DRIVER_PYTHON=%PYSPARK_DRIVER_PYTHON%
-          python -c "import sys; print(sys.version)"     
 
       - name: Test Snowflake CLI
         run: |
@@ -142,7 +128,24 @@ jobs:
           snow connection test -c myconnection
           snow sql -q " Select current_organization_name(); select current_account_name();" -c myconnection
           snow connection set-default myconnection
-          snow connection list        
+          snow connection list
+        shell: pwsh
+          
+      - name: Configure PySpark for Python
+        if: runner.os == 'Windows'
+        run: |
+            echo PYSPARK_PYTHON=$PythonPath >> $GITHUB_ENV
+            echo PYSPARK_DRIVER_PYTHON=$PythonPath >> $GITHUB_ENV
+      
+      - name: Check Python versions
+        if: runner.os == 'Windows'
+        run: |
+          python --version
+          echo PYSPARK_PYTHON=%PYSPARK_PYTHON%
+          echo PYSPARK_DRIVER_PYTHON=%PYSPARK_DRIVER_PYTHON%
+          python -c "import sys; print(sys.version)"
+
+     
      
 
 
