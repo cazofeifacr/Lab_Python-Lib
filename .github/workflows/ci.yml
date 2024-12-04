@@ -123,7 +123,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE && pwd && ls -la
           sed -i "s/^__version__ = \".*\"/__version__ = \"0.0.${COMMIT_COUNT}\"/" ${FILE_NAME}
-          echo "Package Version updated:" && grep "__version__ = " ${FILE_NAME}
+          echo "Package Version updated:" && cat ${FILE_NAME}
         env:
           NEW_VERSION: ${{ steps.gitversion.outputs.version }}
           FILE_NAME: ./my_hw/src/version.py
