@@ -122,7 +122,7 @@ jobs:
       - name: Update Version
         run: |
           cd $GITHUB_WORKSPACE && pwd && ls -la
-          sed -i "s/^__version__ = \".*\"/__version__ = \"0.0.${COMMIT_COUNT}\"/" ${FILE_NAME}
+          sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" ${FILE_NAME}
           echo "Package Version updated:" && cat ${FILE_NAME}
         env:
           NEW_VERSION: ${{ steps.gitversion.outputs.version }}
