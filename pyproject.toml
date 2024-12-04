@@ -17,7 +17,7 @@ authors = [
 license = { text = "MIT" }
 
 [tool.hatch.version]
-path = "my_hw/src/version.py"
+path = "my_hw/src/__version__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["my_hw/src"]

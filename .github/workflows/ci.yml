@@ -126,7 +126,7 @@ jobs:
           echo "Package Version updated:" && cat ${FILE_NAME}
         env:
           NEW_VERSION: ${{ steps.gitversion.outputs.version }}
-          FILE_NAME: ./my_hw/src/version.py
+          FILE_NAME: ./my_hw/src/__version__.py
 
       - name: Repository Setup 
         run: |
