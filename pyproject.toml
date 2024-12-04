@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "my_hw"
-version = "0.0.1"
+dynamic = ['version']
 description = "A simple example CLI package"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -15,6 +15,9 @@ authors = [
 ]
 
 license = { text = "MIT" }
+
+[tool.hatch.version]
+path = "my_hw/src/version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["my_hw/src"]
