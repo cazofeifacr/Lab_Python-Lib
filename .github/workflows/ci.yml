@@ -39,9 +39,12 @@ jobs:
 
       - name: Update version
         run: |
-          sed -i "s/^version = \".*\"/version = \"0.0.${COMMIT_COUNT}\"/" pyproject.toml
+          sed -i "s/^__version__ = \".*\"/__version__ = \"0.0.${COMMIT_COUNT}\"/" ${FILE_NAME}
+          cat ${FILE_NAME}
         env:
           COMMIT_COUNT: ${{ env.COMMIT_COUNT }}
+          FILE_NAME: version.py
+        working-directory: ./my_hw/src  
 
       - name: Set up Python
         uses: actions/setup-python@v5
