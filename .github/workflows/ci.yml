@@ -122,11 +122,12 @@ jobs:
       - name: Update Version
         run: |
           cd $GITHUB_WORKSPACE && pwd && ls -la
-          sed -i "s/^version = \".*\"/version = \"${NEW_VERSION}\"/" pyproject.toml
-          echo "Package Version updated:"
-          grep "version = " pyproject.toml
+          sed -i "s/^__version__ = \".*\"/__version__ = \"0.0.${COMMIT_COUNT}\"/" ${FILE_NAME}
+          echo "Package Version updated:" && grep "__version__ = " ${FILE_NAME}
         env:
           NEW_VERSION: ${{ steps.gitversion.outputs.version }}
+          FILE_NAME: version.py
+        working-directory: ./my_hw/src    
 
       - name: Repository Setup 
         run: |
