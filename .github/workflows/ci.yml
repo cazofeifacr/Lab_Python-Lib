@@ -43,7 +43,7 @@ jobs:
           cat ${FILE_NAME}
         env:
           COMMIT_COUNT: ${{ env.COMMIT_COUNT }}
-          FILE_NAME: version.py
+          FILE_NAME: __version__.py
         working-directory: ./my_hw/src  
 
       - name: Set up Python
