@@ -1,4 +1,4 @@
-name: Hadoop at Windows
+name: Hadoop on Windows
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     - name: Install Java JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '21'
+        java-version: '11' # Hadoop supports Java 8 or 11
         distribution: 'temurin'
 
     - name: Download Hadoop
@@ -25,19 +25,14 @@ jobs:
         tar -xvf hadoop-3.3.6.tar.gz
         move hadoop-3.3.6 hadoop
 
-    - name: Setup Hadoop
+    - name: Setup Hadoop Environment
       run: |
-        echo Config Env hadoop
-        setx HADOOP_HOME "%CD%\\hadoop"
-        setx PATH "%PATH%;%HADOOP_HOME%\\bin"
+        echo "## Configuring Hadoop Environment"
+        $env:HADOOP_HOME = "${{ github.workspace }}\hadoop"
+        $env:PATH += ";$env:HADOOP_HOME\bin"
+        Write-Output "HADOOP_HOME is $env:HADOOP_HOME"
 
-    - name: Get value HADOOP_HOME
-      shell: cmd
+    - name: Verify HADOOP_HOME
       run: |
-        echo %HADOOP_HOME%
-        echo HADOOP_HOME is $env:HADOOP_HOME
-        dir %HADOOP_HOME%
-
-    - name: Get value HADOOP_HOME
-      run: |
-        Get-ChildItem Env
+        echo "Verifying HADOOP_HOME"
+        echo HADOOP_HOME is $env
