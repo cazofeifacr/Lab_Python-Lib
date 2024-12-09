@@ -34,18 +34,9 @@ jobs:
     - name: Get value HADOOP_HOME
       shell: cmd
       run: |
+        echo %HADOOP_HOME%
         echo HADOOP_HOME is $env:HADOOP_HOME
 
     - name: Get value HADOOP_HOME
-      shell: pwsh
       run: |
         Get-ChildItem Env
-
-    - name: Init Hadoop
-      run: |
-        start /B bin\\hdfs namenode -format
-        start /B sbin\\start-dfs.cmd
-
-    - name: Verify Hadoop
-      run: |
-        bin\\hadoop version
