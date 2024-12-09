@@ -16,7 +16,7 @@ jobs:
     - name: Install Java JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '21'
         distribution: 'temurin'
 
     - name: Download Hadoop
@@ -32,7 +32,14 @@ jobs:
         setx PATH "%PATH%;%HADOOP_HOME%\\bin"
 
     - name: Get value HADOOP_HOME
-      run: echo HADOOP_HOME is $env:HADOOP_HOME
+      shell: cmd
+      run: |
+        echo HADOOP_HOME is $env:HADOOP_HOME
+
+    - name: Get value HADOOP_HOME
+      shell: pwsh
+      run: |
+        Get-ChildItem Env
 
     - name: Init Hadoop
       run: |
