@@ -23,38 +23,6 @@ jobs:
         java-version: '${{ env.JAVA_VERSION }}'
         distribution: 'temurin'
 
-    - name: Download and Extract Hadoop
-      shell: pwsh
-      run: |
-        $hadoopVersion = "${{ env.HADOOP_VERSION }}"
-        $downloadUrl = "https://dlcdn.apache.org/hadoop/common/hadoop-$hadoopVersion/hadoop-$hadoopVersion.tar.gz"
-        $outputFile = "hadoop-$hadoopVersion.tar.gz"
-
-        Write-Output "Downloading Hadoop $hadoopVersion"
-        
-        try {
-          Invoke-WebRequest -Uri $downloadUrl -OutFile $outputFile
-          
-          # Verify download
-          if (Test-Path $outputFile) {
-            Write-Output "Download successful, file size: $((Get-Item $outputFile).Length) bytes"
-            
-            # Extract with error handling
-            tar -xvf $outputFile
-            if ($LASTEXITCODE -ne 0) {
-              throw "Extraction failed with exit code $LASTEXITCODE"
-            }
-            
-            Move-Item -Path "hadoop-$hadoopVersion" -Destination "${{ env.HADOOP_HOME }}"
-          } else {
-            throw "Download failed: File not found"
-          }
-        }
-        catch {
-          Write-Error "Hadoop download failed: $_"
-          exit 1
-        }
-
     - name: Download Winutils
       shell: pwsh
       run: |
