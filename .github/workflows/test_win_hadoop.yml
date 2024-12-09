@@ -1,0 +1,46 @@
+name: Hadoop at Windows
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-hadoop:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Java JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Download Hadoop
+      run: |
+        curl -O https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+        tar -xvf hadoop-3.3.6.tar.gz
+        move hadoop-3.3.6 hadoop
+
+    - name: Setup Hadoop
+      run: |
+        echo Config Env hadoop
+        setx HADOOP_HOME "%CD%\\hadoop"
+        setx PATH "%PATH%;%HADOOP_HOME%\\bin"
+
+    - name: Setup archivos XML
+      run: |
+        copy .github\\hadoop-config\\core-site.xml hadoop\\etc\\hadoop\\
+        copy .github\\hadoop-config\\hdfs-site.xml hadoop\\etc\\hadoop\\
+
+    - name: Init Hadoop
+      run: |
+        start /B bin\\hdfs namenode -format
+        start /B sbin\\start-dfs.cmd
+
+    - name: Verify Hadoop
+      run: |
+        bin\\hadoop version
