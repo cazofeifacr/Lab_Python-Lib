@@ -31,10 +31,8 @@ jobs:
         setx HADOOP_HOME "%CD%\\hadoop"
         setx PATH "%PATH%;%HADOOP_HOME%\\bin"
 
-    - name: Setup archivos XML
-      run: |
-        copy .github\\hadoop-config\\core-site.xml hadoop\\etc\\hadoop\\
-        copy .github\\hadoop-config\\hdfs-site.xml hadoop\\etc\\hadoop\\
+    - name: Get value HADOOP_HOME
+      run: echo HADOOP_HOME is $env:HADOOP_HOME
 
     - name: Init Hadoop
       run: |
