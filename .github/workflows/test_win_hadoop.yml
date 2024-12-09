@@ -66,3 +66,52 @@ jobs:
         }
 
         Write-Output "Hadoop services status check complete."
+
+           
+    - name: Download Hadoop winutils
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        # Set variables
+        $repoUrl = "https://github.com/cdarlint/winutils"
+        $branch = "master"
+        $hadoopDir = "hadoop-3.3.6/bin"
+        $outputDir = "${{ env.HADOOP_HOME }}\\bin"
+    
+        # Temporary directory to store downloaded files
+        $tempDir = "$env:RUNNER_TEMP\\hadoop_bin"
+        New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
+    
+        Write-Output "Cloning $repoUrl tree for $hadoopDir..."
+        curl -L "$repoUrl/archive/$branch.zip" -o "$env:RUNNER_TEMP\\winutils.zip"
+    
+        Write-Output "Extracting files..."
+        Expand-Archive -Path "$env:RUNNER_TEMP\\winutils.zip" -DestinationPath $tempDir -Force
+    
+        # Compute source and destination paths
+        $sourceDir = Join-Path -Path $tempDir -ChildPath "winutils-$branch\\$hadoopDir"
+        $destinationDir = "$outputDir"
+    
+        # Ensure the output directory exists
+        New-Item -ItemType Directory -Force -Path $destinationDir | Out-Null
+    
+        # Move files
+        if (Test-Path $sourceDir) {
+            Write-Output "Moving files from $sourceDir to $destinationDir..."
+            Get-ChildItem -Path $sourceDir -Recurse | Move-Item -Destination $destinationDir -Force
+        } else {
+            Write-Error "Source directory $sourceDir does not exist. Exiting."
+        }
+    
+        # Validate winutils.exe exists
+        $winutilsPath = Join-Path -Path $destinationDir -ChildPath "winutils.exe"
+        if (Test-Path $winutilsPath) {
+            Write-Output "winutils.exe is successfully present at $winutilsPath"
+        } else {
+            Write-Error "winutils.exe is missing in $destinationDir. Check the repository source."
+        }
+    
+        # List files in the destination directory
+        Write-Output "Contents of $destinationDir:"
+        Get-ChildItem -Path $destinationDir -Recurse
+     
