@@ -36,3 +36,8 @@ jobs:
       run: |
         echo "Verifying HADOOP_HOME"
         echo HADOOP_HOME is $env
+       
+    - name: List HADOOP_HOME Contents
+      run: |
+        echo "Listing contents of HADOOP_HOME"
+        dir $env:HADOOP_HOME    
