@@ -36,6 +36,7 @@ jobs:
       run: |
         echo %HADOOP_HOME%
         echo HADOOP_HOME is $env:HADOOP_HOME
+        dir %HADOOP_HOME%
 
     - name: Get value HADOOP_HOME
       run: |
