@@ -68,7 +68,7 @@ jobs:
         Write-Output "Hadoop services status check complete."
 
            
-    - name: Download Hadoop winutils
+    - name: Download and Configure Hadoop
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
@@ -101,6 +101,7 @@ jobs:
             Get-ChildItem -Path $sourceDir -Recurse | Move-Item -Destination $destinationDir -Force
         } else {
             Write-Error "Source directory $sourceDir does not exist. Exiting."
+            exit 1
         }
     
         # Validate winutils.exe exists
@@ -109,9 +110,16 @@ jobs:
             Write-Output "winutils.exe is successfully present at $winutilsPath"
         } else {
             Write-Error "winutils.exe is missing in $destinationDir. Check the repository source."
+            exit 1
         }
+    
+        # Set HADOOP_HOME and update PATH
+        Write-Output "Configuring environment variables..."
+        echo "HADOOP_HOME=${{ env.HADOOP_HOME }}" >> $env:GITHUB_ENV
+        echo "PATH=$env:PATH;${{ env.HADOOP_HOME }}\\bin" >> $env:GITHUB_ENV
     
         # List files in the destination directory
         Write-Output "Contents of $destinationDir:"
         Get-ChildItem -Path $destinationDir -Recurse
+
      
