@@ -65,6 +65,22 @@ jobs:
         run: |
           hatch build
 
+      - name: Debug GitHub Variables
+        run: |
+          echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+        env:
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+
       - name: Sign and Verify Packages
         run: |
           for dist in dist/*; do
@@ -84,7 +100,7 @@ jobs:
               --signature "${dist_base}.sig" \
               --cert "${dist_base}.crt" \
               --cert-oidc-issuer https://token.actions.githubusercontent.com \
-              --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" 
+              --cert-identity "https://github.com/cazofeifacr/Lab_Python-Lib/.github/workflows/publish.yml@${GITHUB_REF}" 
 
             echo "Verify using .sigstore bundle"
             echo "Verifying ${dist}..."
@@ -92,7 +108,7 @@ jobs:
               sigstore verify identity "${dist}" \
               --bundle "${dist_base}.sigstore" \
               --cert-oidc-issuer https://token.actions.githubusercontent.com \
-              --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" 
+              --cert-identity "https://github.com/cazofeifacr/Lab_Python-Lib/.github/workflows/publish.yml@${GITHUB_REF}" 
           done
         working-directory: ${{ github.workspace }}
 
