@@ -5,8 +5,8 @@ on:
     types: [published]
 
 permissions:
-    contents: write
-    id-token: write
+  contents: write
+  id-token: write
 
 jobs:
   build:
@@ -48,21 +48,21 @@ jobs:
         run: |
           hatch build
 
-      - name: Sign packages
+      - name: Sign artifacts
         env:
-            SIGSTORE_ID: ${{ github.actor }}@users.noreply.github.com
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            echo "Current directory: $(pwd)" && ls -la
-            echo "Signing packages..."
-            sigstore sign --identity-token ${{ secrets.GITHUB_TOKEN }} dist/*.whl dist/*.tar.gz
-            sigstore verify dist/*.whl dist/*.tar.gz
-        working-directory: ${{ github.workspace }}    
+          # Authenticate using GitHub OIDC
+          sigstore sign \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            --identity-token ${GITHUB_TOKEN} \
+            dist/*.whl dist/*.tar.gz
 
       - name: Verify signatures
         run: |
-            echo "Verifying signatures..."
-            sigstore verify dist/*.tar.gz dist/*.whl
-        working-directory: ${{ github.workspace }}    
+          sigstore verify \
+          --cert-identity "https://github.com/${GITHUB_REPOSITORY}" \
+          dist/*.whl dist/*.tar.gz
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
