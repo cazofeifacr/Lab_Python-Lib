@@ -61,7 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: py-artifacts
-          path: ./dist
+          path: dist
 
       - name: Install twine
         run: |
@@ -77,4 +77,4 @@ jobs:
           echo "Current directory: $(pwd)" && ls -laR
           echo "Uploading to PyPI..."  
           twine upload *
-        working-directory: ./dist
+        working-directory: dist
