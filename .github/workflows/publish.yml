@@ -67,19 +67,35 @@ jobs:
 
       - name: Sign and Verify Packages
         run: |
-          for file in dist/*; do
-            echo "Signing $file..."
-            sigstore sign "$file"
-            
-            echo "Verifying $file..."
-            sigstore verify identity --certificate "$file.crt" \
-                                      --signature "$file.sig" \
-                                      --cert-oidc-issuer "https://token.actions.githubusercontent.com" \
-                                      --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" \
-                                      "$file"
+          for dist in dist/*; do
+            dist_base="$(basename "${dist}")"
+            echo "dist: ${dist}"
+            echo "dist_base: ${dist_base}"
+            python -m \
+              sigstore sign "${dist}" \
+              --output-signature "${dist_base}.sig" \
+              --output-certificate "${dist_base}.crt" \
+              --bundle "${dist_base}.sigstore"
+
+            echo "Verify using .sig .crt pair"
+            echo "Verifying ${dist}..."
+            python -m \
+              sigstore verify identity "${dist}" \
+              --signature "${dist_base}.sig" \
+              --cert "${dist_base}.crt" \
+              --cert-oidc-issuer https://token.actions.githubusercontent.com \
+              --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" 
+
+            echo "Verify using .sigstore bundle"
+            echo "Verifying ${dist}..."
+            python -m \
+              sigstore verify identity "${dist}" \
+              --bundle "${dist_base}.sigstore" \
+              --cert-oidc-issuer https://token.actions.githubusercontent.com \
+              --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" 
           done
         working-directory: ${{ github.workspace }}
-        
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
