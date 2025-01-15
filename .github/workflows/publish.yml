@@ -51,12 +51,11 @@ jobs:
       - name: Sign packages
         env:
             SIGSTORE_ID: ${{ github.actor }}@users.noreply.github.com
-            TWINE_USERNAME: __token__
-            TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
             echo "Current directory: $(pwd)" && ls -la
             echo "Signing packages..."
-            sigstore sign dist/*
+            sigstore sign --identity-token ${{ secrets.GITHUB_TOKEN }} dist/*.whl dist/*.tar.gz
+            sigstore verify dist/*.whl dist/*.tar.gz
         working-directory: ${{ github.workspace }}    
 
       - name: Verify signatures
