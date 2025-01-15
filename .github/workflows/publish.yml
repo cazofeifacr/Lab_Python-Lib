@@ -75,8 +75,11 @@ jobs:
           echo "Content of current directory:"
           ls -la
           echo "Content of dist directory:"
-          ls -la dist/    
-      
+          ls -la dist/
+          echo "Content recursive of dist directory:"
+          ls -laR dist/
+        working-directory: ${{ github.workspace }}
+
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
@@ -86,5 +89,5 @@ jobs:
           echo "Checking distributions..."
           twine check --strict dist/*
           echo "Uploading to PyPI..."
-          twine upload --verbose dist/*
+          twine upload --verbose dist/**/*
         working-directory: ${{ github.workspace }}
