@@ -14,7 +14,7 @@ authors = [
 ]
 license = { text = "Apache License 2.0" }
 classifiers = [
-    "Development Status :: 3 - Alpha"
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
