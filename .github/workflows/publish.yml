@@ -2,7 +2,7 @@ name: Upload Python Package
 
 on:
   release:
-    types: [published]
+    types: [published, prereleased]
 
 jobs:
   build:
@@ -24,6 +24,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip list --verbose
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          # Extract version from GitHub 
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version file
+        run: |
+          echo "__version__ = \"$VERSION\"" > my_hw/src/__version__.py
+          cat my_hw/src/__version__.py
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
 
       - name: Build package
         run: |
