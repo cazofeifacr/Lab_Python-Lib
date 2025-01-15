@@ -44,6 +44,23 @@ jobs:
         run: |
           hatch build
 
+      - name: Sign packages
+        env:
+            SIGSTORE_ID: ${{ github.actor }}@users.noreply.github.com
+            TWINE_USERNAME: __token__
+            TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+            echo "Current directory: $(pwd)" && ls -la
+            echo "Signing packages..."
+            sigstore sign dist/*
+        working-directory: ${{ github.workspace }}    
+
+      - name: Verify signatures
+        run: |
+            echo "Verifying signatures..."
+            sigstore verify dist/*.tar.gz dist/*.whl
+        working-directory: ${{ github.workspace }}    
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
