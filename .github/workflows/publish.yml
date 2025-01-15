@@ -48,22 +48,6 @@ jobs:
         run: |
           hatch build
 
-      - name: Sign artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Authenticate using GitHub OIDC
-          sigstore sign --verbose \
-            --oidc-issuer https://token.actions.githubusercontent.com \
-            --identity-token ${{ secrets.GITHUB_TOKEN }} \
-            dist/*.whl dist/*.tar.gz
-
-      - name: Verify signatures
-        run: |
-          sigstore verify \
-          --cert-identity "https://github.com/${GITHUB_REPOSITORY}" \
-          dist/*.whl dist/*.tar.gz
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
