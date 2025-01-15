@@ -1,0 +1,93 @@
+name: Upload Python Package
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip list --verbose
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          # Extract version from GitHub 
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version file
+        run: |
+          echo "__version__ = \"$VERSION\"" > my_hw/src/__version__.py
+          cat my_hw/src/__version__.py
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
+
+      - name: Build package
+        run: |
+          hatch build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: py-artifacts
+          path: |
+            ./dist/*
+            ./**/dist/*
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: py-artifacts
+          path: ./dist
+
+      - name: Install twine
+        run: |
+          python -m pip install --upgrade pip
+          pip install twine
+          pip list --verbose
+
+      - name: Debug directory structure
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Content of current directory:"
+          ls -la
+          echo "Content of dist directory:"
+          ls -la dist/
+          echo "Content recursive of dist directory:"
+          ls -laR dist/
+        working-directory: ${{ github.workspace }}
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_VERBOSE: 1
+        run: |
+          echo "Checking distributions..."
+          ls -la
+          echo "Uploading to PyPI..."
+          twine upload dist/*
+        working-directory: ./dist
