@@ -59,5 +59,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          twine upload dist/*
+          echo "Current directory: $(pwd)" && ls -laR
+          echo "Uploading to PyPI..."  
+          twine upload *
         working-directory: ./dist
