@@ -28,31 +28,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip list --verbose
-     
+
       - name: Fetch tags
-        run: git fetch --tags    
-          
+        run: git fetch --tags
+
       - name: Get version from tag
         id: get_version
         run: |
-            if [[ $GITHUB_REF == refs/tags/* ]]; then
-              VERSION=${GITHUB_REF#refs/tags/}
-              VERSION=${VERSION#v}
-              echo "version=$VERSION" 
-            else
-              echo "GIT REF is not a tag"
-              VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
-              VERSION=${VERSION#v}
-              echo "version=$VERSION"
-            fi
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+            VERSION=${VERSION#v}
+            echo "version=$VERSION" 
+          else
+            echo "GIT REF is not a tag"
+            VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+            VERSION=${VERSION#v}
+            echo "version=$VERSION"
+          fi
 
-            if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
-              echo "version=$VERSION"
-              echo "Error: No version found"
-              exit 1
-            fi
-          
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
+            echo "version=$VERSION"
+            echo "Error: No version found"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Update version file
         run: |
@@ -83,6 +83,16 @@ jobs:
         with:
           name: py-artifacts
           path: ./dist
+
+      - name: Upload release assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for file in dist/*; do
+            echo "Uploading $file..."
+            gh release upload "${GITHUB_REF#refs/tags/}" "$file"
+          done
+        working-directory: ./dist
 
       - name: Install twine
         run: |
