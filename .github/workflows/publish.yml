@@ -70,10 +70,14 @@ jobs:
           for file in dist/*; do
             echo "Signing $file..."
             sigstore sign "$file"
+            
             echo "Verifying $file..."
-            sigstore verify --crt "$file.crt" --sig "$file.sig" "$file"
+            sigstore verify --certificate "$file.crt" \
+                            --signature "$file.sig" \
+                            "$file"
           done
         working-directory: ${{ github.workspace }}
+        
         
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
