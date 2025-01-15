@@ -69,12 +69,22 @@ jobs:
           pip install twine
           pip list --verbose
 
+      - name: Debug directory structure
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Content of current directory:"
+          ls -la
+          echo "Content of dist directory:"
+          ls -la dist/    
+      
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_VERBOSE: 1
         run: |
-          echo "Current directory: $(pwd)" && ls -laR
-          echo "Uploading to PyPI..."  
-          twine upload *
-        working-directory: dist
+          echo "Checking distributions..."
+          twine check --strict dist/*
+          echo "Uploading to PyPI..."
+          twine upload --verbose dist/*
+        working-directory: ${{ github.workspace }}
