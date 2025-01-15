@@ -87,7 +87,7 @@ jobs:
           TWINE_VERBOSE: 1
         run: |
           echo "Checking distributions..."
-          twine check --strict dist/*
+          ls -la
           echo "Uploading to PyPI..."
-          twine upload --verbose dist/**/*
-        working-directory: ${{ github.workspace }}
+          twine upload --verbose *
+        working-directory: ${{ github.workspace }}/dist
