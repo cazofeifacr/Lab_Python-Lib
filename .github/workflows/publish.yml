@@ -93,5 +93,6 @@ jobs:
           echo "Checking distributions..."
           ls -la
           echo "Uploading to PyPI..."
-          twine upload dist/*
+          echo "twine upload --verbose dist/*"
+          find . -name "*.whl" -o -name "*.tar.gz" | xargs twine upload --verbose
         working-directory: ./dist
