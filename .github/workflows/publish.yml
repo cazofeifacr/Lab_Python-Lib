@@ -64,7 +64,7 @@ jobs:
       - name: Build package
         run: |
           hatch build
-      
+
       - name: Sign and Verify Packages
         run: |
           for file in dist/*; do
@@ -72,12 +72,13 @@ jobs:
             sigstore sign "$file"
             
             echo "Verifying $file..."
-            sigstore verify --certificate "$file.crt" \
-                            --signature "$file.sig" \
-                            "$file"
+            sigstore verify identity --certificate "$file.crt" \
+                                      --signature "$file.sig" \
+                                      --cert-oidc-issuer "https://token.actions.githubusercontent.com" \
+                                      --cert-identity "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/.github/workflows/${{ github.workflow }}@${GITHUB_REF}" \
+                                      "$file"
           done
         working-directory: ${{ github.workspace }}
-        
         
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
