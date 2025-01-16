@@ -10,8 +10,13 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: check-yaml
       - id: check-added-large-files
+      - id: check-yaml
+        exclude: >
+          (?x)^(
+              .github/repo_meta.yaml|
+              .*recipe/meta.yaml|
+          )$
 
   - repo: https://github.com/psf/black
     rev: 23.9.1
