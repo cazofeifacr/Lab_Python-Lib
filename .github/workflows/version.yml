@@ -15,23 +15,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Debug GitHub Variables
+        run: |
+          echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+        env:
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+
       - name: Get version from tag
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-            VERSION=${VERSION#v}
-            echo "version=$VERSION"
+              VERSION=${GITHUB_REF#refs/tags/}
+              VERSION=${VERSION#v}
+              echo "version=$VERSION" 
           else
-            VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
-            VERSION=${VERSION#v}
-            echo "version=$VERSION"
+              echo "GIT REF is not a tag"
+              VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+              VERSION=${VERSION#v}
+              echo "version=$VERSION"
           fi
 
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
-            echo "version=$VERSION"
-            echo "Error: No version found"
-            exit 1
+              echo "version=$VERSION"
+              echo "Error: No version found"
+              exit 1
           fi
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -41,3 +58,11 @@ jobs:
           echo "Running bump script..."
           echo "Version: ${{ steps.get_version.outputs.version }}"
           python .github/scripts/bump_version.py "${{ steps.get_version.outputs.version }}"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "${{ secrets.GIT_USER_EMAIL }}"
+          git add .
+          git status
+          git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"      
