@@ -53,25 +53,19 @@ jobs:
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Run Bump Script
-        run: |
-          echo "Running bump script..."
-          echo "Version: ${{ steps.get_version.outputs.version }}"
-          python .github/scripts/bump_version.py "${{ steps.get_version.outputs.version }}"
-      
-      - name: Repository Setup 
+      - name: Repository Setup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://__token__:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git config --get remote.origin.url
 
-      - name: Update version file
+      - name: Update Version 
         run: |
           echo "Current directory: $(pwd)" && ls -la
           sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" ${FILE_NAME}
           sed -i "s/^version: \".*\"/version: \"${NEW_VERSION}\"/" ${META_FILE}
-          
+
           echo "Updated files"
           find $(pwd) \( -name "meta.yaml" -o -name "__version__.py" \)
           find . -name meta.yaml -exec sh -c 'echo "File: $1" && grep "{% set version = \"" $1' _ {} \;
@@ -80,15 +74,15 @@ jobs:
           NEW_VERSION: ${{ steps.get_version.outputs.version }}
           META_FILE: ./recipe/meta.yaml
           FILE_NAME: ./my_hw/src/__version__.py
-        working-directory: ${{ github.workspace }}  
+        working-directory: ${{ github.workspace }}
 
       - name: Commit and push changes
         run: |
-          git add .
+          git add . --verbose
           git status
           git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"
-          git log -n 1    
-
-
-          
-          
+          git push origin HEAD:${GITHUB_REF}
+          git log -n 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
