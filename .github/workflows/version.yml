@@ -38,6 +38,6 @@ jobs:
 
       - name: Run Bump Script
         run: |
-            echo "Running bump script..."
-            echo "Version: ${{ steps.get_version.outputs.version }}"
-            python .github/scripts/bump_version.py "${{ steps.get_version.outputs.version }}"
+          echo "Running bump script..."
+          echo "Version: ${{ steps.get_version.outputs.version }}"
+          python .github/scripts/bump_version.py "${{ steps.get_version.outputs.version }}"
