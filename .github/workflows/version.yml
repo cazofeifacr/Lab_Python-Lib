@@ -80,7 +80,7 @@ jobs:
           NEW_VERSION: ${{ steps.get_version.outputs.version }}
           META_FILE: ./recipe/meta.yaml
           FILE_NAME: ./my_hw/src/__version__.py
-        working-directory: $GITHUB_WORKSPACE  
+        working-directory: ${{ github.workspace }}  
 
       - name: Commit and push changes
         run: |
