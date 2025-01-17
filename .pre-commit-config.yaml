@@ -32,9 +32,18 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
     hooks:
-      - id: mypy  # Verifica tipos estáticos en Python
+      - id: mypy  
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v3.9.1
     hooks:
-      - id: commitizen  # Asegura que los mensajes de commit sigan una convención
+      - id: commitizen 
+
+  - repo: local
+    hooks:
+      - id: check-readme
+        name: Check README
+        entry: ./.github/scripts/check_readme.py
+        language: python
+        files: .*
+        always_run: true
