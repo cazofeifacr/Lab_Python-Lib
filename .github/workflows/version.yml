@@ -65,8 +65,9 @@ jobs:
           git config --get remote.origin.url
 
       - name: Update Version files
-        shell: bash set -e; -o pipefail
+        shell: bash
         run: |
+          set -e  
           echo "Current directory: $(pwd)"
           echo "Listing files in the workspace:"
           ls -la
@@ -90,39 +91,39 @@ jobs:
 
       - name: Create temporary branch
         id: git_branch
-        shell: bash set -e; -o pipefail
+        shell: bash
         run: |
-          
-            TEMP_BRANCH="bump-version-${{ steps.get_version.outputs.version }}"
-            TEMP_TAG="v${{ steps.get_version.outputs.version }}"
-          
-            echo "Checking if branch $TEMP_BRANCH exists..."
-            if git ls-remote --heads origin "$TEMP_BRANCH" | grep -q "$TEMP_BRANCH"; then
-                echo "Branch $TEMP_BRANCH exists remotely. Deleting..."
-                git push origin --delete "$TEMP_BRANCH"
-            fi
+          set -e
+          TEMP_BRANCH="bump-version-${{ steps.get_version.outputs.version }}"
+          TEMP_TAG="v${{ steps.get_version.outputs.version }}"
 
-            if git branch --list "$TEMP_BRANCH"; then
-                echo "Branch $TEMP_BRANCH exists locally. Deleting..."
-                git branch -D "$TEMP_BRANCH"
-            fi
+          echo "Checking if branch $TEMP_BRANCH exists..."
+          if git ls-remote --heads origin "$TEMP_BRANCH" | grep -q "$TEMP_BRANCH"; then
+              echo "Branch $TEMP_BRANCH exists remotely. Deleting..."
+              git push origin --delete "$TEMP_BRANCH"
+          fi
 
-            echo "Checking if tag $TEMP_TAG exists..."
-            if git ls-remote --tags origin "$TEMP_TAG" | grep -q "$TEMP_TAG"; then
-                echo "Tag $TEMP_TAG exists remotely. Deleting..."
-                git push origin --delete "$TEMP_TAG"
-            fi
+          if git branch --list "$TEMP_BRANCH"; then
+              echo "Branch $TEMP_BRANCH exists locally. Deleting..."
+              git branch -D "$TEMP_BRANCH"
+          fi
 
-            if git tag --list "$TEMP_TAG" | grep -q "$TEMP_TAG"; then
-                echo "Tag $TEMP_TAG exists locally. Deleting..."
-                git tag -d "$TEMP_TAG"
-            fi
-            
-            echo "Creating new branch: $TEMP_BRANCH"
-            git checkout -b "$TEMP_BRANCH"
-            git status
+          echo "Checking if tag $TEMP_TAG exists..."
+          if git ls-remote --tags origin "$TEMP_TAG" | grep -q "$TEMP_TAG"; then
+              echo "Tag $TEMP_TAG exists remotely. Deleting..."
+              git push origin --delete "$TEMP_TAG"
+          fi
 
-            echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_OUTPUT
+          if git tag --list "$TEMP_TAG" | grep -q "$TEMP_TAG"; then
+              echo "Tag $TEMP_TAG exists locally. Deleting..."
+              git tag -d "$TEMP_TAG"
+          fi
+
+          echo "Creating new branch: $TEMP_BRANCH"
+          git checkout -b "$TEMP_BRANCH"
+          git status
+
+          echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
 
