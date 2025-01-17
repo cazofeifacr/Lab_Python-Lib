@@ -64,21 +64,29 @@ jobs:
           git remote set-url origin https://__token__:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git config --get remote.origin.url
 
-      - name: Update Version
+      - name: Update Version files
+        shell: bash set -e; -o pipefail
         run: |
-          echo "Current directory: $(pwd)" && ls -la
-          sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" ${FILE_NAME}
-          sed -i "s/^version: \".*\"/version: \"${NEW_VERSION}\"/" ${META_FILE}
+          echo "Current directory: $(pwd)"
+          echo "Listing files in the workspace:"
+          ls -la
 
-          echo "Updated files"
-          find $(pwd) \( -name "meta.yaml" -o -name "__version__.py" \)
-          find . -name meta.yaml -exec sh -c 'echo "File: $1" && grep "{% set version = \"" $1' _ {} \;
-          find . -name "__version__.py" -exec sh -c 'echo "File: $1" && grep "__version__" $1' _ {} \;
+          echo "Searching for files to update..."
+          find . -name "$META_FILE" -o -name "$FILE_NAME"
+
+          echo "Updating $META_FILE files..."
+          find . -name "$META_FILE" -exec sed -i "s/{% set version = \".*\" %}/{% set version = \"${NEW_VERSION}\" %}/" {} \;
+
+          echo "Updating $FILE_NAME files..."
+          find . -name "$FILE_NAME" -exec sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" {} \;
+
+          echo "Updated files:"
+          find . -name "$META_FILE" -exec sh -c 'echo "File: $1" && grep "{% set version = \"" $1' _ {} \;
+          find . -name "$FILE_NAME" -exec sh -c 'echo "File: $1" && grep "__version__" $1' _ {} \;
         env:
           NEW_VERSION: ${{ steps.get_version.outputs.version }}
-          META_FILE: ./recipe/meta.yaml
-          FILE_NAME: ./my_hw/src/__version__.py
-        working-directory: ${{ github.workspace }}
+          META_FILE: meta.yaml
+          FILE_NAME: __version__.py
 
       - name: Create temporary branch
         id: git_branch
@@ -107,7 +115,7 @@ jobs:
             git log --oneline -1
           fi
         env:
-          TEMP_BRANCH: ${{ steps.git_branch.outputs.TEMP_BRANCH }}  
+          TEMP_BRANCH: ${{ steps.git_branch.outputs.TEMP_BRANCH }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
 
