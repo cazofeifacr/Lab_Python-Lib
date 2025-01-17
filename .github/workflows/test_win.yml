@@ -3,8 +3,15 @@ name: Python Run Tests Win
 on:
   push:
     branches: [main]
+    paths:
+      - "**"
   pull_request:
     branches: [main]
+    paths:
+      - "**"
+      - "!README.md"
+      - "!**/meta.yaml"
+      - "!**/pyproject.toml"  
 
 jobs:
   test:

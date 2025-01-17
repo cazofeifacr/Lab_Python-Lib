@@ -3,8 +3,15 @@ name: Python Package CI
 on:
   push:
     branches: [main]
+    paths:
+      - "**"
   pull_request:
     branches: [main]
+    paths:
+      - "**"
+      - "!README.md"
+      - "!**/meta.yaml"
+      - "!**/pyproject.toml"
 
 permissions: write-all
 
