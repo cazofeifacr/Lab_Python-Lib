@@ -60,7 +60,7 @@ jobs:
           git remote set-url origin https://__token__:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git config --get remote.origin.url
 
-      - name: Update Version 
+      - name: Update Version
         run: |
           echo "Current directory: $(pwd)" && ls -la
           sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" ${FILE_NAME}
@@ -76,13 +76,47 @@ jobs:
           FILE_NAME: ./my_hw/src/__version__.py
         working-directory: ${{ github.workspace }}
 
+      - name: Create temporary branch
+        id: git_branch
+        run: |
+          TEMP_BRANCH="bump-version-${{ steps.get_version.outputs.version }}"
+          git checkout -b "$TEMP_BRANCH"
+          git status
+          echo "Created branch: $TEMP_BRANCH"
+
+          echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
       - name: Commit and push changes
         run: |
           git add . --verbose
           git status
-          git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"
-          git push origin HEAD:${GITHUB_REF}
-          git log -n 1
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"
+            git push origin "$TEMP_BRANCH"
+            echo "Changes pushed to $TEMP_BRANCH."
+            git status
+            git log --oneline -1
+          fi
         env:
+          TEMP_BRANCH: ${{ steps.git_branch.outputs.TEMP_BRANCH }}  
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y gh
+
+      - name: Create Pull Request
+        run: |
+          gh pr create --title "Bump version to ${{ steps.get_version.outputs.version }}" \
+                          --body "This PR bumps the version to ${{ steps.get_version.outputs.version }}." \
+                          --head "${{ steps.git_branch.outputs.TEMP_BRANCH }}" \
+                          --base "main"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
