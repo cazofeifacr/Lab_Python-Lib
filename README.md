@@ -17,7 +17,7 @@ hatch build -t wheel
 
 ### Deploy Local
 
-```
+```bash
 pip3 install dist/my_hw-0.0.1-py3-none-any.whl --force-reinstall
 ```
 
