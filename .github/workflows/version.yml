@@ -149,18 +149,3 @@ jobs:
           TEMP_BRANCH: ${{ steps.git_branch.outputs.TEMP_BRANCH }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
-
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y gh
-
-      - name: Create Pull Request
-        run: |
-          gh pr create --title "Release Bump version to ${{ steps.get_version.outputs.version }}" \
-                          --body-file .github/pull_request_template.md \
-                          --head "${{ steps.git_branch.outputs.TEMP_BRANCH }}" \
-                          --base "main"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ${{ github.workspace }}
