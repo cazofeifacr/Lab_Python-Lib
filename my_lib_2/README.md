@@ -17,5 +17,4 @@ pip install my-hw
 Please refer to [CONTRIBUTING.md][contributing].
 
 Happy Codding!
-
 2025

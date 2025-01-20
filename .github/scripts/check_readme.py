@@ -21,6 +21,7 @@ def find_subdirectory_readmes():
     for root, dirs, files in os.walk("."):
         for file in files:
             if file.lower() == "readme.md" and root != ".":
+                print(f"Found README.md in subdirectory: {os.path.join(root, file)}")
                 sub_readmes.append(os.path.join(root, file))
     return sub_readmes
 
