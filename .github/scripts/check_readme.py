@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import os
 import subprocess
+import sys
+import os
 
 
 def get_last_commit_hash(file_path):
-    """Get the last commit hash for a given file."""
     result = subprocess.run(
         ["git", "log", "-n", "1", "--pretty=format:%H", "--", file_path],
         stdout=subprocess.PIPE,
@@ -13,8 +13,15 @@ def get_last_commit_hash(file_path):
     return result.stdout.decode("utf-8").strip()
 
 
+def get_changed_files():
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--name-only"],
+        stdout=subprocess.PIPE,
+    )
+    return result.stdout.decode("utf-8").splitlines()
+
+
 def find_readme_files():
-    """Find all README.md files in subdirectories."""
     readme_files = []
     for root, dirs, files in os.walk("."):
         for file in files:
@@ -23,22 +30,22 @@ def find_readme_files():
     return readme_files
 
 
-def check_readme_updated():
-    """Check if the root README.md is updated based on other README.md files.
+def check_readme_sync():
+    changed_files = get_changed_files()
 
-    Raises:
-        Exception: If the root README.md is not updated.
-    """
-    root_readme_last_commit = get_last_commit_hash("README.md")
-    readmes_to_monitor = find_readme_files()
+    subdir_readmes = find_readme_files()
 
-    for readme in readmes_to_monitor:
-        readme_last_commit = get_last_commit_hash(readme)
-        if readme_last_commit > root_readme_last_commit:
-            raise Exception(f"Root README.md is not updated for changes in {readme}")
+    for readme in subdir_readmes:
+        if readme in changed_files:
+            root_readme_commit = get_last_commit_hash("README.md")
+            subdir_readme_commit = get_last_commit_hash(readme)
 
-    print("Root README.md is up to date.")
+            if subdir_readme_commit != root_readme_commit:
+                print(f"Error: Check file README.md {readme}")
+                sys.exit(1)
+
+    print("All files README.md are synced.")
 
 
 if __name__ == "__main__":
-    check_readme_updated()
+    check_readme_sync()

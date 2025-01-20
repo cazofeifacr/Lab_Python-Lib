@@ -42,6 +42,6 @@ repos:
       - id: check-readme
         name: Check README
         entry: ./.github/scripts/check_readme.py
-        language: python
-        files: .*
+        language: system
+        files: \.md$
         always_run: true
