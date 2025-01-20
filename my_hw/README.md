@@ -1,4 +1,4 @@
-# My Project
+# Python library
 
 ## Description
 
