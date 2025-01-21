@@ -39,9 +39,15 @@ repos:
 
   - repo: local
     hooks:
+      - id: set-permissions
+        name: Set script permissions
+        entry: chmod +x ./.github/scripts/check_readme.py
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: check-readme
         name: Check README
         entry: ./.github/scripts/check_readme.py
-        language: system
+        language: python
         files: \.md$
         always_run: true
