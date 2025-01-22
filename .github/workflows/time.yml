@@ -67,8 +67,8 @@ jobs:
         shell: pwsh
         id: timestampwin
         run: |
-          $timestamp = $(Get-Date -Format yyyyMMddHHmmssfff)
-          $schemaId = "${{ secrets.SNOWFLAKE_SCHEMA }}_${{ github.run_id }}_${{ github.run_number }}_$timestamp"
+          $timestamp = "$(Get-Date -Format yyyyMMddHHmmssfff)"
+          $schemaId = "${{ github.run_id }}_${{ github.run_number }}_$timestamp"
           Write-Output "Schema ID: $schema_id"
           echo "SNOWFLAKE_CONNECTIONS_MYCONNECTION_SCHEMA_ID_WIN=$schema_id" >> $Env:GITHUB_ENV
 
