@@ -1,0 +1,27 @@
+name: Generate Timestamp Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate timestamp
+        run: |
+          echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+      - name: Use timestamp
+        run: |
+          echo "El timestamp generado es: ${{ env.timestamp }}"
+
+      - name: Create file with timestamp
+        run: echo "Este archivo fue generado a las ${{ env.timestamp }}" > archivo_${{ env.timestamp }}.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: archivo_${{ env.timestamp }}.txt
+          path: archivo_${{ env.timestamp }}.txt
