@@ -17,6 +17,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +%Y%m%d%H%M%S%3N)" >> $GITHUB_ENV
+
+      - name: Set Schema ID
+        run: |
+          echo "CONNECTIONS_MYCONNECTION_SCHEMA_ID=${{ github.run_id }}_${{ github.run_number }}_${{ env.timestamp }}" >> $GITHUB_ENV
+        env:
+          timestamp: ${{ steps.timestamp.outputs.timestamp }}
+
+      - name: Validate Connection
+        run: |
+          echo "SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}"
+        env:
+          CONNECTIONS_MYCONNECTION_SCHEMA_ID: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}
+
       - name: Setup .Net
         uses: actions/setup-dotnet@v4
         with:
