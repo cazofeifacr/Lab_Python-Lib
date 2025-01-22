@@ -43,3 +43,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         env:
           CONNECTIONS_MYCONNECTION_SCHEMA_ID: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}
+
+  generate-timestamp_v1_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(Get-Date -Format yyyyMMddHHmmssfff)"
+
+      - name: Set Schema ID
+        run: echo "CONNECTIONS_MYCONNECTION_SCHEMA_ID=${{ github.run_id }}_${{ github.run_number }}_${{ steps.timestamp.outputs.timestamp }}" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      - name: Get Schema ID
+        run: |
+          echo "El Schema ID generado es: $env:CONNECTIONS_MYCONNECTION_SCHEMA_ID"
+        shell: pwsh
+        env:
+          CONNECTIONS_MYCONNECTION_SCHEMA_ID: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}
