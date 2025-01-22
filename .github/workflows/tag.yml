@@ -28,9 +28,8 @@ jobs:
 
       - name: Validate Connection
         run: |
-          echo "SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}"
-        env:
-          CONNECTIONS_MYCONNECTION_SCHEMA_ID: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}
+            echo "Validating Connection"  
+            echo "SNOWFLAKE_ACCOUNT=${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}"
 
       - name: Setup .Net
         uses: actions/setup-dotnet@v4
