@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  generate-timestamp:
+  generate-timestamp_v2:
     runs-on: ubuntu-latest
     steps:
       - name: Generate timestamp
@@ -25,3 +25,21 @@ jobs:
         with:
           name: archivo_${{ env.timestamp }}.txt
           path: archivo_${{ env.timestamp }}.txt
+
+  generate-timestamp_v1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%Y%m%d%H%M%S%3NM%S%3N)"
+
+      - name: Set Schema ID
+        run: echo "CONNECTIONS_MYCONNECTION_SCHEMA_ID=${{ github.run_id }}_${{ github.run_number }}_${{ steps.timestamp.outputs.timestamp }}" >> $GITHUB_ENV
+
+      - name: Get Schema ID
+        run: |
+          echo "El Schema ID generado es: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}"
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        env:
+          CONNECTIONS_MYCONNECTION_SCHEMA_ID: ${{ env.CONNECTIONS_MYCONNECTION_SCHEMA_ID }}
