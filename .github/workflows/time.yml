@@ -69,7 +69,6 @@ jobs:
         run: |
           $timestamp = Get-Date -Format yyyyMMddHHmmssfff
           $schemaId = "${{ github.run_id }}_${{ github.run_number }}_$timestamp"
-          Write-Output "Schema ID: $schema_id"
           Add-Content -Path $Env:GITHUB_ENV -Value "SNOWFLAKE_CONNECTIONS_MYCONNECTION_SCHEMA_ID_WIN=$schemaId"
 
       - name: Get timestamp Windows
