@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Generate timestamp
         run: |
-          echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "timestamp=$(date +%Y%m%d%H%M%S%3N)" >> $GITHUB_ENV
 
       - name: Use timestamp
         run: |
