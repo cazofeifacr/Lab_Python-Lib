@@ -6,6 +6,7 @@ on:
   pull_request:
     types: [ready_for_review]
     branches: [main]
+
 jobs:
   pr-lint:
     runs-on: ubuntu-latest
