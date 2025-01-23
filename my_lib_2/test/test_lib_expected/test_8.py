@@ -2,4 +2,4 @@ import os
 
 
 def test_8():
-    assert os.path.exists("lib8.py")
+    assert os.path.exists("lib8.txt")
