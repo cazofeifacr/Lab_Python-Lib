@@ -45,6 +45,8 @@ jobs:
           # Get the list of changed Python files excluding files in test/ directories
           CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '^test/' || true)
 
+          echo "Changed Python files:" $CHANGED_PYFILES
+          
           if [ -z "$CHANGED_PYFILES" ]; then
               echo "No Python files changed."
               FILE_COUNT=0
