@@ -22,7 +22,7 @@ jobs:
           on-failed-regex-fail-action: true
           on-failed-regex-request-changes: false
           on-failed-regex-create-review: false
-          on-failed-regex-comment: "Please prefix your PR title with a JIRA ticket number. e.g ISSUE-123456: <Title>"
+          on-failed-regex-comment: "Please fix your PR title with a JIRA ticket number. e.g ISSUE-123456: <Title>"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Check PR Description
