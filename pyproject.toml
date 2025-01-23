@@ -12,7 +12,7 @@ dependencies = []
 authors = [
     { name = "Carlod Azofeifa", email = "carlos.azofeifa@github.com" }
 ]
-license = {text = 'Apache-2.0'}
+license = { text = "Apache Software License (Apache License 2.0)" }
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
