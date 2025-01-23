@@ -36,10 +36,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          CHANGED_PY_FILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '/test/')
-          echo "PR includes the following Python files: $CHANGED_PY_FILES"
+          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '/test/')
+          echo "PR includes the following Python files: $CHANGED_PYFILES"
 
-          FILE_COUNT=$(echo "$CHANGED_PY_FILES" | wc -l)
+          FILE_COUNT=$(echo "$CHANGED_PYFILES" | wc -l)
           echo "PR includes $FILE_COUNT Python files."
 
           if [ "$FILE_COUNT" -ge 5 ]; then
