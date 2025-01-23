@@ -37,15 +37,15 @@ jobs:
           echo "Base SHA: ${{ github.event.pull_request.base.sha }}"
           echo "Head SHA: ${{ github.event.pull_request.head.sha }}"
 
-          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '/test/')
+          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '^test/')
           echo "PR includes the following Python files: $CHANGED_PYFILES"
 
           FILE_COUNT=$(echo "$CHANGED_PYFILES" | wc -l)
           echo "PR includes $FILE_COUNT Python files."
 
           if [ "$FILE_COUNT" -gt 20 ]; then
-            echo "PR includes too many Python files (>$FILE_COUNT). Please split it into smaller PRs."
-            exit 1
+              echo "PR includes too many Python files (>$FILE_COUNT). Please split it into smaller PRs."
+              exit 1
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
