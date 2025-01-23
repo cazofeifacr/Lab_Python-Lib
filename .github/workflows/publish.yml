@@ -8,6 +8,9 @@ permissions:
   contents: write
   id-token: write
 
+env:
+ TWINE_VERSION: "6.0.1"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -147,8 +150,10 @@ jobs:
       - name: Install twine
         run: |
           python -m pip install --upgrade pip
-          pip install twine
+          pip install twine==$TWINE_VERSION -q
           pip list --verbose
+        env:
+          TWINE_VERSION: ${{ env.TWINE_VERSION }}  
 
       - name: Debug directory structure
         run: |
