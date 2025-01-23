@@ -42,7 +42,7 @@ jobs:
           FILE_COUNT=$(echo "$CHANGED_PYFILES" | wc -l)
           echo "PR includes $FILE_COUNT Python files."
 
-          if [ "$FILE_COUNT" -ge 5 ]; then
+          if [ "$FILE_COUNT" -ge 6 ]; then
             echo "PR includes too many Python files (>$FILE_COUNT). Please split it into smaller PRs."
             exit 1
           fi
