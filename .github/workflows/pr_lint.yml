@@ -22,7 +22,7 @@ jobs:
           on-failed-regex-fail-action: true
           on-failed-regex-request-changes: false
           on-failed-regex-create-review: false
-          on-failed-regex-comment: "Please prefix your PR title with a JIRA ticket number. e.g SNOW-123456: <Title>"
+          on-failed-regex-comment: "Please prefix your PR title with a JIRA ticket number. e.g ISSUE-123456: <Title>"
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Check PR Description
@@ -41,23 +41,27 @@ jobs:
 
           echo "Fetching diff between the base and head commits..."
           git fetch --no-tags --prune --depth=2 origin ${{ github.event.pull_request.base.ref }} || true
-          git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} || true
 
-          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '^test/')
-          echo "Changed Python files: $CHANGED_PYFILES"
+          
+          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '^test/' || true)
+          echo "Changed Python files:" $CHANGED_PYFILES
 
           if [ -z "$CHANGED_PYFILES" ]; then
               echo "No Python files changed."
               FILE_COUNT=0
           else
+              echo "Changed Python files: $CHANGED_PYFILES"
               FILE_COUNT=$(echo "$CHANGED_PYFILES" | wc -l)
           fi
 
           echo "Total Python files changed: $FILE_COUNT"
 
+          # Fail if more than 20 Python files are changed
           if [ "$FILE_COUNT" -gt 20 ]; then
               echo "PR includes too many Python files ($FILE_COUNT > 20). Please split it into smaller PRs."
               exit 1
           fi
+
+          echo "PR size check passed successfully."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
