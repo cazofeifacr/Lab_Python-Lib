@@ -37,7 +37,7 @@ jobs:
           echo "Base SHA: ${{ github.event.pull_request.base.sha }}"
           echo "Head SHA: ${{ github.event.pull_request.head.sha }}"
 
-          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '/test/')
+          CHANGED_PYFILES=$(git diff --name-only --diff-filter=d ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.py$' | grep -v '^test/')
           echo "PR includes the following Python files: $CHANGED_PYFILES"
 
           FILE_COUNT=$(echo "$CHANGED_PYFILES" | wc -l)
