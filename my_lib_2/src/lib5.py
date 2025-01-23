@@ -2,5 +2,6 @@
 #   def lib5_func():
 
 
-def lib5_func():  # noqa: D103
+def lib5_func():
+    """_summary_."""
     print("lib5_func")
