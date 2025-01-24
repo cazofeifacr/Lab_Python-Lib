@@ -51,7 +51,7 @@ jobs:
         env:
           COMMIT_COUNT: ${{ env.COMMIT_COUNT }}
           FILE_NAME: __version__.py
-        working-directory: ./my_hw/src  
+        working-directory: ./my_hw/src
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -79,6 +79,11 @@ jobs:
     needs: build
 
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -135,7 +140,7 @@ jobs:
           NEW_VERSION: ${{ steps.gitversion.outputs.version }}
           FILE_NAME: ./my_hw/src/__version__.py
 
-      - name: Repository Setup 
+      - name: Repository Setup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
