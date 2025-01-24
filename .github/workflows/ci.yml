@@ -20,6 +20,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install jq
+        run: |
+          apt-get update && sudo apt-get install -y jq
+
       - name: List all secrets names
         run: |
           echo "Listing all secrets:"
