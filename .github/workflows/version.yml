@@ -35,14 +35,20 @@ jobs:
           GITHUB_WORKSPACE: ${{ github.workspace }}
           GITHUB_WORKFLOW: ${{ github.workflow }}
 
+      - name: Debug GITHUB_REF
+        run: |
+          echo "GITHUB_REF: $GITHUB_REF"
+
       - name: Get version from tag
         id: get_version
         run: |
           set -e
-          if [[ $GITHUB_REF == */releases/tag/v* ]]; then
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          elif [[ $GITHUB_REF == */releases/tag/v* ]]; then
             VERSION=${GITHUB_REF##*/releases/tag/v}
           else
-            echo "Error: GITHUB_REF is not a valid tag format"
+            echo "Error: GITHUB_REF is not a valid tag format ($GITHUB_REF)"
             exit 1
           fi
 
