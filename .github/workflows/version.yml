@@ -39,17 +39,18 @@ jobs:
         run: |
           echo "GITHUB_REF: $GITHUB_REF"
 
-      - name: Get version from tag
+      - name: Get Version
         id: get_version
         run: |
-          set -e
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-          elif [[ $GITHUB_REF == */releases/tag/v* ]]; then
-            VERSION=${GITHUB_REF##*/releases/tag/v}
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+              VERSION=${GITHUB_REF#refs/tags/}
+              VERSION=${VERSION#v}
+              echo "version=$VERSION"
           else
-            echo "Error: GITHUB_REF is not a valid tag format ($GITHUB_REF)"
-            exit 1
+              echo "GIT REF is not a tag"
+              VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+              VERSION=${VERSION#v}
+              echo "version=$VERSION"
           fi
 
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
@@ -57,7 +58,7 @@ jobs:
             exit 1
           fi
 
-          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "VERSION detected: $VERSION"
 
       - name: Repository Setup
