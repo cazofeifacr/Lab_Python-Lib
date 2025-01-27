@@ -1,5 +1,5 @@
 {% set name = "my_hw" %}
-{% set version = "0.1.48rc1" %}
+{% set version = "0.1.56" %}
 
 package:
   name: {{ name|lower }}
