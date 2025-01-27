@@ -132,13 +132,14 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Bump version to ${{ steps.get_version.outputs.version }}"
+            git commit -m "Bump version to ${{ env.version }}"
             git push origin "$TEMP_BRANCH"
             echo "Changes pushed to $TEMP_BRANCH."
             git status
             git log --oneline -1
           fi
         env:
+          VERSION: ${{ env.version }}
           TEMP_BRANCH: ${{ steps.git_branch.outputs.TEMP_BRANCH }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
