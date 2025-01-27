@@ -80,16 +80,16 @@ jobs:
           find . -name "$META_FILE" -o -name "$FILE_NAME"
 
           echo "Updating $META_FILE files..."
-          find . -name "$META_FILE" -exec sed -i "s/{% set version = \".*\" %}/{% set version = \"${NEW_VERSION}\" %}/" {} \;
+          find . -name "$META_FILE" -exec sed -i "s/{% set version = \".*\" %}/{% set version = \"${VERSION}\" %}/" {} \;
 
           echo "Updating $FILE_NAME files..."
-          find . -name "$FILE_NAME" -exec sed -i "s/^__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" {} \;
+          find . -name "$FILE_NAME" -exec sed -i "s/^__version__ = \".*\"/__version__ = \"${VERSION}\"/" {} \;
 
           echo "Updated files:"
           find . -name "$META_FILE" -exec sh -c 'echo "File: $1" && grep "{% set version = \"" $1' _ {} \;
           find . -name "$FILE_NAME" -exec sh -c 'echo "File: $1" && grep "__version__" $1' _ {} \;
         env:
-          NEW_VERSION: ${{ env.version }}
+          VERSION: ${{ env.version }}
           META_FILE: meta.yaml
           FILE_NAME: __version__.py
 
@@ -99,9 +99,8 @@ jobs:
           set -e  
           set -o pipefail
 
-          TEMP_BRANCH="bump-version-${{ env.version }}"
-          TEMP_TAG="v${{ env.version }}"
-
+          TEMP_BRANCH="bump-version-${VERSION}"
+          
           echo "Checking if branch $TEMP_BRANCH exists..."
           if git ls-remote --heads origin "$TEMP_BRANCH" | grep -q "$TEMP_BRANCH"; then
             echo "Branch $TEMP_BRANCH exists remotely. Deleting..."
@@ -113,18 +112,13 @@ jobs:
             git branch -D "$TEMP_BRANCH" || echo "Branch $TEMP_BRANCH not found locally. Skipping deletion."
           fi
 
-          echo "Checking if tag $TEMP_TAG exists..."
-          if git tag --list | grep -q "$TEMP_TAG"; then
-            echo "Tag $TEMP_TAG exists locally. Deleting..."
-            git tag -d "$TEMP_TAG"
-          fi
-
           echo "Creating new branch: $TEMP_BRANCH"
           git checkout -b "$TEMP_BRANCH"
           git status
           echo "TEMP_BRANCH=$TEMP_BRANCH" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF: ${{ github.ref }}
+          VERSION: ${{ env.version }}
 
       - name: Commit and push changes
         shell: bash
