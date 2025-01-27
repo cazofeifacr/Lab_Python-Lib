@@ -107,11 +107,6 @@ jobs:
           fi
 
           echo "Checking if tag $TEMP_TAG exists..."
-          if git ls-remote --tags origin "$TEMP_TAG" | grep -q "$TEMP_TAG"; then
-            echo "Tag $TEMP_TAG exists remotely. Deleting..."
-            git push origin --delete "$TEMP_TAG"
-          fi
-
           if git tag --list | grep -q "$TEMP_TAG"; then
             echo "Tag $TEMP_TAG exists locally. Deleting..."
             git tag -d "$TEMP_TAG"
