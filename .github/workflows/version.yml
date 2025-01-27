@@ -58,7 +58,7 @@ jobs:
             exit 1
           fi
 
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_ENV
           echo "VERSION detected: $VERSION"
 
       - name: Repository Setup
@@ -100,7 +100,7 @@ jobs:
           set -o pipefail
 
           TEMP_BRANCH="bump-version-${VERSION}"
-          
+
           echo "Checking if branch $TEMP_BRANCH exists..."
           if git ls-remote --heads origin "$TEMP_BRANCH" | grep -q "$TEMP_BRANCH"; then
             echo "Branch $TEMP_BRANCH exists remotely. Deleting..."
