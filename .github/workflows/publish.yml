@@ -32,9 +32,6 @@ jobs:
           pip install -r requirements.txt
           pip list --verbose
 
-      - name: Fetch tags
-        run: git fetch --tags
-
       - name: Debug GITHUB_REF
         run: |
           echo "GITHUB_REF: $GITHUB_REF"
@@ -42,26 +39,36 @@ jobs:
       - name: Get version from tag
         id: get_version
         run: |
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-            VERSION=${VERSION#v}
-            echo "1. version=$VERSION"
-          elif [[ $GITHUB_REF == */releases/tag/v* ]]; then
-            VERSION=${GITHUB_REF##*/releases/tag/v}
-            echo "2. version=$VERSION"
-          else
-            echo "GIT REF is not a tag"
-            VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
-            VERSION=${VERSION#v}
-            echo "3. version=$VERSION"
-          fi
+          git fetch --tags
+          LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
 
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
-            echo "4. version=$VERSION"
-            echo "Error: No version found"
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            CURRENT_TAG=${GITHUB_REF#refs/tags/} 
+            echo "GITHUB_REF is a tag: $CURRENT_TAG"
+          else
+            echo "Error: GITHUB_REF is not a tag"
             exit 1
           fi
 
+          NORMALIZED_CURRENT_TAG=${CURRENT_TAG#v}
+          NORMALIZED_LATEST_TAG=${LATEST_TAG#v}
+
+          echo "Latest tag: $LATEST_TAG (normalized: $NORMALIZED_LATEST_TAG)"
+          echo "Current tag: $CURRENT_TAG (normalized: $NORMALIZED_CURRENT_TAG)"
+
+          if [[ "$NORMALIZED_CURRENT_TAG" != "$NORMALIZED_LATEST_TAG" ]]; then
+            echo "Error: The current tag ($NORMALIZED_CURRENT_TAG) is not the latest tag ($NORMALIZED_LATEST_TAG)"
+            exit 1
+          else
+            echo "The current tag ($NORMALIZED_CURRENT_TAG) is the latest tag ($NORMALIZED_LATEST_TAG)"
+          fi
+
+          if [[ ! "$NORMALIZED_CURRENT_TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$ ]]; then
+            echo "Error: Invalid version format ($NORMALIZED_CURRENT_TAG)"
+            exit 1
+          fi
+
+          VERSION=$NORMALIZED_CURRENT_TAG
           echo "version=$VERSION" >> $GITHUB_ENV
           echo "VERSION detected: $VERSION"
 
