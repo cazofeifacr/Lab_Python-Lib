@@ -65,7 +65,7 @@ jobs:
           echo "__version__ = \"$VERSION\"" > my_hw/src/__version__.py
           cat my_hw/src/__version__.py
         env:
-          VERSION: ${{ steps.get_version.outputs.version }}
+          VERSION: ${{ env.version }}
 
       - name: Build package
         run: |
