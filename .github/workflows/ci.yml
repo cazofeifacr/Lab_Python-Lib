@@ -155,12 +155,14 @@ jobs:
       - name: Create Tag [Paused]
         run: |
           git status
-          if git tag -d ${{ env.NEW_VERSION }} 2>/dev/null; then
-            echo "Tag ${{ env.NEW_VERSION }} deleted."
-          else
-            echo "Tag ${{ env.NEW_VERSION }} does not exist. Skipping deletion."
-          fi 
-          git tag ${{ env.NEW_VERSION }}
+          git for-each-ref refs/tags --sort=-authordate --format='%(refname)' --count=5
+          
+          #if git tag -d ${{ env.NEW_VERSION }} 2>/dev/null; then
+          #  echo "Tag ${{ env.NEW_VERSION }} deleted."
+          #else
+          #  echo "Tag ${{ env.NEW_VERSION }} does not exist. Skipping deletion."
+          #fi 
+          #git tag ${{ env.NEW_VERSION }}
           # git push origin ${{ env.NEW_VERSION }} -f --tags -v --progress
           # git for-each-ref refs/tags --sort=-authordate --format='%(refname)' --count=5
         env:
