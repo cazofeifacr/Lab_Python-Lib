@@ -14,13 +14,6 @@ name = "my_hw"
 readme = "README.md"
 requires-python = '>=3.9,<3.12'
 
-[project.urls]
-"BugTracker" = "https://github.com/cazofeifacr/Lab_Python-Lib/issues"
-"Community" = "https://discuss.cazofeifacr.io/"
-"Documentation" = "https://docs.cazofeifacr.io/"
-"ReleaseNotes" = "https://github.com/cazofeifacr/Lab_Python-Lib/quick-reference/changelog"
-"Source" = "https://github.com/cazofeifacr/Lab_Python-Lib"
-
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
@@ -40,6 +33,13 @@ classifiers = [
   "Topic :: Software Development :: Widget Sets",
 ]
 license = {text = "Apache License, Version 2.0"}
+
+[project.urls]
+"BugTracker" = "https://github.com/cazofeifacr/Lab_Python-Lib/issues"
+"Community" = "https://discuss.cazofeifacr.io/"
+"Documentation" = "https://docs.cazofeifacr.io/"
+"ReleaseNotes" = "https://github.com/cazofeifacr/Lab_Python-Lib/quick-reference/changelog"
+"Source" = "https://github.com/cazofeifacr/Lab_Python-Lib"
 
 [tool.hatch.version]
 path = "my_hw/src/__version__.py"
