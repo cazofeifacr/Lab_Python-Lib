@@ -1,5 +1,5 @@
 ---
-name: Bug Report \U0001F41E
+name: "Bug Report \U0001F41E"
 about: Something isn't working as expected? Here is the right place to report.
 title: ''
 labels: bug, needs triage
