@@ -1,6 +1,6 @@
 # Lab_Python-Lib
 
-Steps for Building 
+Steps for Building
 
 ### Install Dependencies
 
@@ -8,7 +8,7 @@ Steps for Building
 pip3 install -r requirements.txt
 ```
 
-### Build 
+### Build
 
 ```
 hatch build -t sdist
@@ -23,16 +23,18 @@ pip3 install dist/my_hw-0.0.1-py3-none-any.whl --force-reinstall
 
 #### Test
 
-Get Package Info: 
+Get Package Info:
+
 ```
 pip3 show my-hw
 ```
 
-Execute: 
+Execute:
+
 ```
 hello-world
 ```
 
 > ¡Hello, world from a python package!
 
-Happy Codding 2025.
+Happy Codding!

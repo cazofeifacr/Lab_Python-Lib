@@ -1,0 +1,32 @@
+name: Label Draft PRs
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, converted_to_draft]
+
+jobs:
+  label-draft:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add label to draft PR
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: DO NOT MERGE
+
+  remove-label-draft:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Remove label from PR
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: DO NOT MERGE
