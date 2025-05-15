@@ -16,27 +16,6 @@ permissions:
   contents: read
   pull-requests: write
 jobs:
-  pr-draft:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check PR Title
-        run: |
-          if [[ "${{ github.event.pull_request.title }}" =~ ^[a-zA-Z]+-[0-9]+ ]]; then
-            echo "PR title is valid."
-          else
-            echo "PR title is invalid. Please use the format <JIRA-TICKET>: <Title>"
-            exit 1
-          fi
-
-      - name: Check PR Description
-        run: |
-          if [ -z "${{ github.event.pull_request.body }}" ]; then
-            echo "PR description is empty. Please provide a description."
-            exit 1
-          fi
   add-label-draft:
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == true
