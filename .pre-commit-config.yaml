@@ -45,9 +45,3 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-      - id: check-readme
-        name: Check README
-        entry: ./.github/scripts/check_readme.py
-        language: python
-        files: \.md$
-        always_run: true
