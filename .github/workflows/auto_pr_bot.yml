@@ -44,6 +44,6 @@ jobs:
         python .github/agent/auto_pr_bot.py
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
         GITHUB_REPO: ${{ github.repository }}
       shell: bash  
