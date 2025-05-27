@@ -18,7 +18,9 @@ gh = Github(os.environ["GITHUB_TOKEN"])
 repo = gh.get_repo(REPO_NAME)
 
 # Get latest issue
-issue = next(repo.get_issues(state="open", sort="created", direction="desc"), None)
+issues = repo.get_issues(state="open", sort="created", direction="desc")
+issue = next(iter(issues), None)
+
 if not issue:
     print("No open issues found.")
     exit(0)
