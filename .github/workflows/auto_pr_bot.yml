@@ -29,9 +29,18 @@ jobs:
     - name: Install dependencies
       run: pip install -r .github/agent/requirements.txt
 
-    - name: Run the Agent
+   
+    - name: List available models
+      id: list_models
       run: |
         python .github/agent/list_models.py
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPO: ${{ github.repository }}
+      shell: bash     
+    - name: Run the Agent
+      run: |
         python .github/agent/auto_pr_bot.py
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
