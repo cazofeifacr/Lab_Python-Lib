@@ -9,9 +9,7 @@ from github import Github
 
 GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 REPO_NAME = os.environ["GITHUB_REPO"]
-PROMPT_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
-)
+PROMPT_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro-vision-latest:generateContent"
 
 # GitHub setup
 gh = Github(os.environ["GITHUB_TOKEN"])
