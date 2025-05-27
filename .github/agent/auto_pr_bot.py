@@ -47,6 +47,9 @@ body = {"contents": [{"parts": [{"text": prompt}]}]}
 
 response = requests.post(PROMPT_URL, headers=headers, params=params, json=body)
 resp_json = response.json()
+if "candidates" not in resp_json:
+    print("Gemini API error:", resp_json)
+    exit(1)
 generated = resp_json["candidates"][0]["content"]["parts"][0]["text"]
 
 print("Generated code:\n", generated)
