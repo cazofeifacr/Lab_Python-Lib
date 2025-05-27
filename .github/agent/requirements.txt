@@ -1,2 +1,2 @@
-PyGithub>=2.0
+PyGithub
 requests

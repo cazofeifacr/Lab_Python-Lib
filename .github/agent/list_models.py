@@ -1,4 +1,4 @@
-# List available Gemini models using your API key
+# List available Gemini models using this API key
 import requests
 import os
 
@@ -7,4 +7,5 @@ LIST_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 params = {"key": GEMINI_API_KEY}
 
 response = requests.get(LIST_MODELS_URL, params=params)
+print(response.status_code)
 print(response.json())
