@@ -3,6 +3,8 @@ extend-exclude = [
   "**/tests/",
   ".github/scripts/",
   "**/Demos/",
+  ".github/agents/",
+  ".github/agent/",
 ]
 line-length = 120
 
